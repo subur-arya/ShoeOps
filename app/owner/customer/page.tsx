@@ -110,7 +110,7 @@ export default function CustomerPage() {
       {/* List */}
       <div className="bg-white rounded-2xl border border-[#dddbd5] shadow-sm overflow-hidden">
         {/* Header */}
-        <div className="grid grid-cols-[1fr_80px_110px_100px_90px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
+        <div className="hidden md:grid grid-cols-[1fr_80px_110px_100px_90px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
           {['Customer', 'Pesanan', 'Total Spend', 'Terakhir', 'Segmen'].map(h => (
             <span key={h} className="text-[10px] font-bold text-[#8a8a8a] uppercase tracking-widest">{h}</span>
           ))}
@@ -122,7 +122,7 @@ export default function CustomerPage() {
         ) : (
           <div className="divide-y divide-[#eceae6]">
             {filtered.map(c => (
-              <div key={c.id} className="grid grid-cols-[1fr_80px_110px_100px_90px] gap-3 items-center px-5 py-3 hover:bg-[#fdf9f7] transition-colors">
+              <div key={c.id} className="hover:bg-[#fdf9f7] transition-colors">
                 {/* Name + initials */}
                 <div className="flex items-center gap-3 min-w-0">
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-extrabold flex-shrink-0 ${

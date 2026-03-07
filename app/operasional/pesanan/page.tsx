@@ -134,7 +134,7 @@ export default function OpsListPesananPage() {
         ) : (
           <div className="divide-y divide-[#eceae6]">
             {filtered.map(o => delId === o.id ? (
-              <div key={o.id} className="grid grid-cols-[80px_1fr_90px_110px_140px_110px_36px] gap-3 items-center px-5 py-3 bg-red-50">
+              <div key={o.id} className="bg-red-50">
                 <span className="font-mono text-xs text-red-400">{o.order_code}</span>
                 <p className="text-sm font-bold text-red-700 col-span-4">Hapus pesanan ini?</p>
                 <div className="flex gap-2 col-span-2 justify-end">
@@ -143,7 +143,7 @@ export default function OpsListPesananPage() {
                 </div>
               </div>
             ) : (
-              <div key={o.id} className="grid grid-cols-[80px_1fr_90px_110px_140px_110px_36px] gap-3 items-center px-5 py-3 hover:bg-[#fdf9f7] transition-colors">
+              <div key={o.id} className="hover:bg-[#fdf9f7] transition-colors">
                 <span className="font-mono text-xs text-[#8a8a8a] cursor-pointer" onClick={() => setSelected(o)}>{o.order_code}</span>
                 <div className="min-w-0 cursor-pointer" onClick={() => setSelected(o)}>
                   <p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p>

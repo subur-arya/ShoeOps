@@ -392,7 +392,7 @@ export default function AnalitikPage() {
             <div>
               <h2 className="text-sm font-extrabold text-[#0d0d0d] mb-3">Performa Promo</h2>
               <div className="bg-white rounded-2xl border border-[#dddbd5] shadow-sm overflow-hidden">
-                <div className="grid grid-cols-[1fr_80px_80px_90px_80px_80px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
+                <div className="hidden md:grid grid-cols-[1fr_80px_80px_90px_80px_80px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
                   {['Kode Promo','Tipe','Nilai','Terpakai','Kuota','Status'].map(h=><span key={h} className="text-[10px] font-bold text-[#8a8a8a] uppercase tracking-widest">{h}</span>)}
                 </div>
                 <div className="divide-y divide-[#eceae6]">
@@ -400,18 +400,34 @@ export default function AnalitikPage() {
                     const pctUsed=d.maxUses?Math.round(d.usedCount/d.maxUses*100):null
                     const isExpired=d.expiresAt&&new Date(d.expiresAt)<new Date()
                     return (
-                      <div key={d.id} className="grid grid-cols-[1fr_80px_80px_90px_80px_80px] gap-3 items-center px-5 py-3 hover:bg-[#fdf9f7] transition-colors">
-                        <div><p className="text-sm font-bold font-mono text-[#0d0d0d]">{d.code}</p>{d.minOrder>0&&<p className="text-[10px] text-[#8a8a8a]">Min. {formatRupiah(d.minOrder)}</p>}</div>
-                        <span className="text-xs text-[#525252]">{d.type==='pct'?'Persentase':'Nominal'}</span>
-                        <span className="text-sm font-bold text-[#0d0d0d]">{d.type==='pct'?`${d.value}%`:formatRupiah(d.value)}</span>
-                        <div>
-                          <div className="flex items-center gap-2"><span className="text-sm font-bold text-[#0d0d0d]">{d.usedCount}x</span>{pctUsed!==null&&<span className="text-[10px] text-[#8a8a8a]">({pctUsed}%)</span>}</div>
-                          {pctUsed!==null&&<div className="w-full bg-[#eceae6] rounded-full h-1 mt-1"><div className={`h-1 rounded-full ${pctUsed>=90?'bg-red-400':pctUsed>=60?'bg-amber-400':'bg-green-400'}`} style={{width:`${Math.min(pctUsed,100)}%`}}/></div>}
+                      <div key={d.id} className="hover:bg-[#fdf9f7] transition-colors">
+                        {/* Mobile */}
+                        <div className="md:hidden px-4 py-3">
+                          <div className="flex items-start justify-between gap-2">
+                            <div><p className="text-sm font-bold font-mono text-[#0d0d0d]">{d.code}</p>{d.minOrder>0&&<p className="text-[10px] text-[#8a8a8a]">Min. {formatRupiah(d.minOrder)}</p>}</div>
+                            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${isExpired?'bg-gray-100 text-gray-500':!d.active?'bg-red-50 text-red-600':d.maxUses&&d.usedCount>=d.maxUses?'bg-gray-100 text-gray-500':'bg-green-50 text-green-700'}`}>
+                              {isExpired?'Kadaluarsa':!d.active?'Nonaktif':d.maxUses&&d.usedCount>=d.maxUses?'Habis':'Aktif'}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between mt-2">
+                            <span className="text-xs text-[#525252]">{d.type==='pct'?`${d.value}%`:formatRupiah(d.value)} · {d.usedCount}x pakai</span>
+                            <span className="text-xs text-[#8a8a8a]">Kuota: {d.maxUses??'∞'}</span>
+                          </div>
                         </div>
-                        <span className="text-xs text-[#8a8a8a]">{d.maxUses??'∞'}</span>
-                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full text-center w-fit ${isExpired?'bg-gray-100 text-gray-500':!d.active?'bg-red-50 text-red-600':d.maxUses&&d.usedCount>=d.maxUses?'bg-gray-100 text-gray-500':'bg-green-50 text-green-700'}`}>
-                          {isExpired?'Kadaluarsa':!d.active?'Nonaktif':d.maxUses&&d.usedCount>=d.maxUses?'Habis':'Aktif'}
-                        </span>
+                        {/* Desktop */}
+                        <div className="hidden md:grid grid-cols-[1fr_80px_80px_90px_80px_80px] gap-3 items-center px-5 py-3">
+                          <div><p className="text-sm font-bold font-mono text-[#0d0d0d]">{d.code}</p>{d.minOrder>0&&<p className="text-[10px] text-[#8a8a8a]">Min. {formatRupiah(d.minOrder)}</p>}</div>
+                          <span className="text-xs text-[#525252]">{d.type==='pct'?'Persentase':'Nominal'}</span>
+                          <span className="text-sm font-bold text-[#0d0d0d]">{d.type==='pct'?`${d.value}%`:formatRupiah(d.value)}</span>
+                          <div>
+                            <div className="flex items-center gap-2"><span className="text-sm font-bold text-[#0d0d0d]">{d.usedCount}x</span>{pctUsed!==null&&<span className="text-[10px] text-[#8a8a8a]">({pctUsed}%)</span>}</div>
+                            {pctUsed!==null&&<div className="w-full bg-[#eceae6] rounded-full h-1 mt-1"><div className={`h-1 rounded-full ${pctUsed>=90?'bg-red-400':pctUsed>=60?'bg-amber-400':'bg-green-400'}`} style={{width:`${Math.min(pctUsed,100)}%`}}/></div>}
+                          </div>
+                          <span className="text-xs text-[#8a8a8a]">{d.maxUses??'∞'}</span>
+                          <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full text-center w-fit ${isExpired?'bg-gray-100 text-gray-500':!d.active?'bg-red-50 text-red-600':d.maxUses&&d.usedCount>=d.maxUses?'bg-gray-100 text-gray-500':'bg-green-50 text-green-700'}`}>
+                            {isExpired?'Kadaluarsa':!d.active?'Nonaktif':d.maxUses&&d.usedCount>=d.maxUses?'Habis':'Aktif'}
+                          </span>
+                        </div>
                       </div>
                     )
                   })}
@@ -440,23 +456,41 @@ export default function AnalitikPage() {
             <span className="ml-auto text-xs text-[#8a8a8a]">{filteredTrx.length} transaksi</span>
           </div>
           <div className="bg-white rounded-2xl border border-[#dddbd5] shadow-sm overflow-hidden">
-            <div className="grid grid-cols-[80px_1fr_110px_110px_100px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
+            <div className="hidden md:grid grid-cols-[80px_1fr_110px_110px_100px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
               {['Kode','Customer & Treatment','Tanggal','Total','Status'].map(h=><span key={h} className="text-[10px] font-bold text-[#8a8a8a] uppercase tracking-widest">{h}</span>)}
             </div>
             {filteredTrx.length===0?<p className="text-center py-10 text-sm text-[#8a8a8a]">Tidak ada transaksi.</p>:(
               <div className="divide-y divide-[#eceae6]">
                 {filteredTrx.map(o=>(
-                  <div key={o.id} className="grid grid-cols-[80px_1fr_110px_110px_100px] gap-3 items-center px-5 py-3 hover:bg-[#fdf9f7] transition-colors">
-                    <span className="font-mono text-xs text-[#8a8a8a]">{o.order_code}</span>
-                    <div className="min-w-0"><p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p><p className="text-[11px] text-[#8a8a8a] truncate">{o.order_items?.[0]?.treatment_name}</p></div>
-                    <span className="text-xs text-[#8a8a8a]">{formatDate(o.created_at)}</span>
-                    <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(o.total_price)}</span>
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full text-center ${STATUS_STYLE[o.status]}`}>{STATUS_LABEL[o.status]}</span>
+                  <div key={o.id} className="hover:bg-[#fdf9f7] transition-colors">
+                    {/* Mobile */}
+                    <div className="md:hidden px-4 py-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1"><p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p><p className="text-[11px] text-[#8a8a8a] truncate">{o.order_items?.[0]?.treatment_name}</p></div>
+                        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full flex-shrink-0 ${STATUS_STYLE[o.status]}`}>{STATUS_LABEL[o.status]}</span>
+                      </div>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="font-mono text-[11px] text-[#8a8a8a]">{o.order_code} · {formatDate(o.created_at)}</span>
+                        <span className="text-sm font-bold text-[#d4510c]">{formatRupiah(o.total_price)}</span>
+                      </div>
+                    </div>
+                    {/* Desktop */}
+                    <div className="hidden md:grid grid-cols-[80px_1fr_110px_110px_100px] gap-3 items-center px-5 py-3">
+                      <span className="font-mono text-xs text-[#8a8a8a]">{o.order_code}</span>
+                      <div className="min-w-0"><p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p><p className="text-[11px] text-[#8a8a8a] truncate">{o.order_items?.[0]?.treatment_name}</p></div>
+                      <span className="text-xs text-[#8a8a8a]">{formatDate(o.created_at)}</span>
+                      <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(o.total_price)}</span>
+                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full text-center ${STATUS_STYLE[o.status]}`}>{STATUS_LABEL[o.status]}</span>
+                    </div>
                   </div>
                 ))}
-                <div className="grid grid-cols-[80px_1fr_110px_110px_100px] gap-3 items-center px-5 py-3 bg-[#0d0d0d]">
+                <div className="hidden md:grid grid-cols-[80px_1fr_110px_110px_100px] gap-3 items-center px-5 py-3 bg-[#0d0d0d]">
                   <span className="text-[11px] font-bold text-white/40 col-span-3">{filteredTrx.length} transaksi</span>
                   <span className="text-sm font-extrabold text-[#e8784a]">{formatRupiah(grandTotal)}</span><span/>
+                </div>
+                <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#0d0d0d]">
+                  <span className="text-[11px] font-bold text-white/40">{filteredTrx.length} transaksi</span>
+                  <span className="text-sm font-extrabold text-[#e8784a]">{formatRupiah(grandTotal)}</span>
                 </div>
               </div>
             )}
@@ -477,21 +511,39 @@ export default function AnalitikPage() {
             <span className="ml-auto text-xs text-[#8a8a8a]">{filteredExp.length} item · <strong className="text-[#d4510c]">{formatRupiah(grandExp)}</strong></span>
           </div>
           <div className="bg-white rounded-2xl border border-[#dddbd5] shadow-sm overflow-hidden">
-            <div className="grid grid-cols-[100px_1fr_130px_110px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
+            <div className="hidden md:grid grid-cols-[100px_1fr_130px_110px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
               {['Tanggal','Nama','Kategori','Jumlah'].map(h=><span key={h} className="text-[10px] font-bold text-[#8a8a8a] uppercase tracking-widest">{h}</span>)}
             </div>
             {filteredExp.length===0?<p className="text-center py-10 text-sm text-[#8a8a8a]">Tidak ada pengeluaran.</p>:(
               <div className="divide-y divide-[#eceae6]">
                 {filteredExp.map(e=>(
-                  <div key={e.id} className="grid grid-cols-[100px_1fr_130px_110px] gap-3 items-center px-5 py-3 hover:bg-[#fdf9f7] transition-colors">
-                    <span className="text-xs text-[#8a8a8a]">{new Date(e.date).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</span>
-                    <div><p className="text-sm font-semibold text-[#0d0d0d]">{e.name}</p>{e.notes&&<p className="text-[11px] text-[#8a8a8a]">{e.notes}</p>}</div>
-                    {e.category?<span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full w-fit" style={{background:(e.category as any).color+'20',color:(e.category as any).color}}>{(e.category as any).name}</span>:<span className="text-[11px] text-[#c0bdb8]">—</span>}
-                    <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(e.amount)}</span>
+                  <div key={e.id} className="hover:bg-[#fdf9f7] transition-colors">
+                    {/* Mobile */}
+                    <div className="md:hidden px-4 py-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1"><p className="text-sm font-semibold text-[#0d0d0d]">{e.name}</p>{e.notes&&<p className="text-[11px] text-[#8a8a8a]">{e.notes}</p>}</div>
+                        <span className="text-sm font-bold text-[#c0392b] flex-shrink-0">{formatRupiah(e.amount)}</span>
+                      </div>
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span className="text-[11px] text-[#8a8a8a]">{new Date(e.date).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</span>
+                        {e.category?<span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full" style={{background:(e.category as any).color+'20',color:(e.category as any).color}}>{(e.category as any).name}</span>:<span className="text-[11px] text-[#c0bdb8]">—</span>}
+                      </div>
+                    </div>
+                    {/* Desktop */}
+                    <div className="hidden md:grid grid-cols-[100px_1fr_130px_110px] gap-3 items-center px-5 py-3">
+                      <span className="text-xs text-[#8a8a8a]">{new Date(e.date).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</span>
+                      <div><p className="text-sm font-semibold text-[#0d0d0d]">{e.name}</p>{e.notes&&<p className="text-[11px] text-[#8a8a8a]">{e.notes}</p>}</div>
+                      {e.category?<span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full w-fit" style={{background:(e.category as any).color+'20',color:(e.category as any).color}}>{(e.category as any).name}</span>:<span className="text-[11px] text-[#c0bdb8]">—</span>}
+                      <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(e.amount)}</span>
+                    </div>
                   </div>
                 ))}
-                <div className="grid grid-cols-[100px_1fr_130px_110px] gap-3 items-center px-5 py-3 bg-[#0d0d0d]">
+                <div className="hidden md:grid grid-cols-[100px_1fr_130px_110px] gap-3 items-center px-5 py-3 bg-[#0d0d0d]">
                   <span className="text-[11px] font-bold text-white/40 col-span-3">{filteredExp.length} pengeluaran</span>
+                  <span className="text-sm font-extrabold text-[#e8784a]">{formatRupiah(grandExp)}</span>
+                </div>
+                <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#0d0d0d]">
+                  <span className="text-[11px] font-bold text-white/40">{filteredExp.length} pengeluaran</span>
                   <span className="text-sm font-extrabold text-[#e8784a]">{formatRupiah(grandExp)}</span>
                 </div>
               </div>

@@ -48,7 +48,7 @@ export default function OpsCustomerPage() {
       </div>
 
       <div className="bg-white rounded-2xl border border-[#dddbd5] shadow-sm overflow-hidden">
-        <div className="grid grid-cols-[1fr_70px_100px_90px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
+        <div className="hidden md:grid grid-cols-[1fr_70px_100px_90px] gap-3 px-5 py-2.5 border-b border-[#eceae6] bg-[#f8f7f4]">
           {['Customer', 'Pesanan', 'Total Spend', 'Terakhir'].map(h => (
             <span key={h} className="text-[10px] font-bold text-[#8a8a8a] uppercase tracking-widest">{h}</span>
           ))}
@@ -58,7 +58,7 @@ export default function OpsCustomerPage() {
         ) : (
           <div className="divide-y divide-[#eceae6]">
             {filtered.map(c => (
-              <div key={c.id} className="grid grid-cols-[1fr_70px_100px_90px] gap-3 items-center px-5 py-3 hover:bg-[#fdf9f7] transition-colors">
+              <div key={c.id} className="hover:bg-[#fdf9f7] transition-colors">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-8 h-8 rounded-lg bg-[#f5f4f1] flex items-center justify-center text-xs font-extrabold text-[#525252] flex-shrink-0">
                     {c.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}

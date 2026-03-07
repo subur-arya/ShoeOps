@@ -119,20 +119,45 @@ export default function OwnerPesananPage() {
           <div className="divide-y divide-[#eceae6]">
             {filtered.map(o => (
               <div key={o.id} onClick={() => setSelected(o)}
-                className="grid grid-cols-[80px_1fr_90px_110px_130px] gap-3 items-center px-5 py-3 cursor-pointer hover:bg-[#fdf9f7] transition-colors">
-                <span className="font-mono text-xs text-[#8a8a8a]">{o.order_code}</span>
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p>
-                  <p className="text-[11px] text-[#8a8a8a] truncate">
-                    {o.order_items?.[0]?.treatment_name.split('||')[0]}
-                    {o.order_items && o.order_items.length > 1 ? ` +${o.order_items.length - 1}` : ''}
-                  </p>
+                className="cursor-pointer hover:bg-[#fdf9f7] transition-colors">
+                {/* Mobile card */}
+                <div className="md:hidden px-4 py-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p>
+                      <p className="text-[11px] text-[#8a8a8a] truncate mt-0.5">
+                        {o.order_items?.[0]?.treatment_name.split('||')[0]}
+                        {o.order_items && o.order_items.length > 1 ? ` +${o.order_items.length - 1}` : ''}
+                      </p>
+                    </div>
+                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full flex-shrink-0" style={stStyle(o.status)}>
+                      {stLabel(o.status)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="font-mono text-[11px] text-[#8a8a8a]">{o.order_code}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-[#8a8a8a]">{formatDateShort(o.created_at)}</span>
+                      <span className="text-sm font-bold text-[#d4510c]">{formatRupiah(o.total_price)}</span>
+                    </div>
+                  </div>
                 </div>
-                <span className="text-xs text-[#8a8a8a]">{formatDateShort(o.created_at)}</span>
-                <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(o.total_price)}</span>
-                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full text-center" style={stStyle(o.status)}>
-                  {stLabel(o.status)}
-                </span>
+                {/* Desktop row */}
+                <div className="hidden md:grid grid-cols-[80px_1fr_90px_110px_130px] gap-3 items-center px-5 py-3">
+                  <span className="font-mono text-xs text-[#8a8a8a]">{o.order_code}</span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p>
+                    <p className="text-[11px] text-[#8a8a8a] truncate">
+                      {o.order_items?.[0]?.treatment_name.split('||')[0]}
+                      {o.order_items && o.order_items.length > 1 ? ` +${o.order_items.length - 1}` : ''}
+                    </p>
+                  </div>
+                  <span className="text-xs text-[#8a8a8a]">{formatDateShort(o.created_at)}</span>
+                  <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(o.total_price)}</span>
+                  <span className="text-[11px] font-bold px-2.5 py-1 rounded-full text-center" style={stStyle(o.status)}>
+                    {stLabel(o.status)}
+                  </span>
+                </div>
               </div>
             ))}
           </div>

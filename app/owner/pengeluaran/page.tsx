@@ -216,14 +216,14 @@ export default function PengeluaranPage() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-[#dddbd5] overflow-hidden">
-            <div className="grid grid-cols-[100px_1fr_120px_110px_80px] gap-3 px-5 py-2.5 bg-[#f8f7f4] border-b border-[#eceae6]">
+            <div className="hidden md:grid grid-cols-[100px_1fr_120px_110px_80px] gap-3 px-5 py-2.5 bg-[#f8f7f4] border-b border-[#eceae6]">
               {['Tanggal', 'Nama & Catatan', 'Kategori', 'Jumlah', ''].map(h => (
                 <span key={h} className="text-[10px] font-bold text-[#8a8a8a] uppercase tracking-widest">{h}</span>
               ))}
             </div>
             <div className="divide-y divide-[#eceae6]">
               {filtered.map(e => (
-                <div key={e.id} className="grid grid-cols-[100px_1fr_120px_110px_80px] gap-3 items-center px-5 py-3 hover:bg-[#fdf9f7] transition-colors">
+                <div key={e.id} className="hover:bg-[#fdf9f7] transition-colors">
                   <span className="text-xs text-[#8a8a8a]">
                     {new Date(e.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </span>
@@ -255,7 +255,7 @@ export default function PengeluaranPage() {
                   </div>
                 </div>
               ))}
-              <div className="grid grid-cols-[100px_1fr_120px_110px_80px] gap-3 items-center px-5 py-3 bg-[#0d0d0d]">
+              <div className="hidden md:grid grid-cols-[100px_1fr_120px_110px_80px] gap-3 items-center px-5 py-3 bg-[#0d0d0d]">
                 <span className="text-[11px] text-white/40 col-span-3">{filtered.length} pengeluaran</span>
                 <span className="text-sm font-extrabold text-[#e8784a]">{formatRupiah(totalFiltered)}</span>
                 <span />
