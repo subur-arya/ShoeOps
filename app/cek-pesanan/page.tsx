@@ -316,12 +316,15 @@ export default function CekPesananPage() {
         </div>
       </div>
 
-      {/* Tombol login tersembunyi untuk staff toko */}
+      {/* Logo ShoeOps — klik untuk akses portal staff */}
       <div className="pb-8 text-center">
-        <a href="/login"
-          className="text-[10px] text-[#dddbd5] hover:text-[#c0bdb8] transition-colors select-none"
-          title="Portal Staff">
-          · · ·
+        <a href="/login" className="inline-flex items-center gap-1.5 opacity-20 hover:opacity-60 transition-opacity duration-300" title="Portal Staff">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-[#525252]">
+            <path d="M2 17l2-8h14l2 8H2z"/><path d="M4 9c0-3 2-5 5-5 2 0 4 1 5 3"/>
+          </svg>
+          <span className="text-[11px] font-extrabold tracking-tight text-[#525252]">
+            Shoe<span className="text-[#d4510c]">Ops</span>
+          </span>
         </a>
       </div>
     </div>
