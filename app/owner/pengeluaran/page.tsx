@@ -224,34 +224,56 @@ export default function PengeluaranPage() {
             <div className="divide-y divide-[#eceae6]">
               {filtered.map(e => (
                 <div key={e.id} className="hover:bg-[#fdf9f7] transition-colors">
-                  <span className="text-xs text-[#8a8a8a]">
-                    {new Date(e.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-[#0d0d0d] truncate">{e.name}</p>
-                    {e.notes && <p className="text-[11px] text-[#8a8a8a] truncate">{e.notes}</p>}
+                  {/* Mobile card */}
+                  <div className="md:hidden px-4 py-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-[#0d0d0d] truncate">{e.name}</p>
+                        {e.notes && <p className="text-[11px] text-[#8a8a8a] truncate">{e.notes}</p>}
+                      </div>
+                      <span className="text-sm font-bold text-[#c0392b] flex-shrink-0">{formatRupiah(e.amount)}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] text-[#8a8a8a]">{new Date(e.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
+                        {e.category ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                            style={{ background: e.category.color + '20', color: e.category.color }}>
+                            {e.category.name}
+                          </span>
+                        ) : null}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button onClick={() => openEdit(e)} className="p-1.5 hover:bg-[#f5f4f1] text-[#8a8a8a] rounded-lg transition-all"><Edit2 size={13} /></button>
+                        <button onClick={() => handleDelete(e.id)} className="p-1.5 hover:bg-red-50 text-[#8a8a8a] hover:text-red-500 rounded-lg transition-all"><Trash2 size={13} /></button>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    {e.category ? (
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full"
-                        style={{ background: e.category.color + '20', color: e.category.color }}>
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: e.category.color }} />
-                        {e.category.name}
-                      </span>
-                    ) : (
-                      <span className="text-[11px] text-[#c0bdb8]">—</span>
-                    )}
-                  </div>
-                  <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(e.amount)}</span>
-                  <div className="flex items-center gap-1 justify-end">
-                    <button onClick={() => openEdit(e)}
-                      className="p-1.5 hover:bg-[#f5f4f1] text-[#8a8a8a] hover:text-[#0d0d0d] rounded-lg transition-all">
-                      <Edit2 size={13} />
-                    </button>
-                    <button onClick={() => handleDelete(e.id)}
-                      className="p-1.5 hover:bg-red-50 text-[#8a8a8a] hover:text-red-500 rounded-lg transition-all">
-                      <Trash2 size={13} />
-                    </button>
+                  {/* Desktop row */}
+                  <div className="hidden md:grid grid-cols-[100px_1fr_120px_110px_80px] gap-3 items-center px-5 py-3">
+                    <span className="text-xs text-[#8a8a8a]">
+                      {new Date(e.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-[#0d0d0d] truncate">{e.name}</p>
+                      {e.notes && <p className="text-[11px] text-[#8a8a8a] truncate">{e.notes}</p>}
+                    </div>
+                    <div>
+                      {e.category ? (
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full"
+                          style={{ background: e.category.color + '20', color: e.category.color }}>
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: e.category.color }} />
+                          {e.category.name}
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-[#c0bdb8]">—</span>
+                      )}
+                    </div>
+                    <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(e.amount)}</span>
+                    <div className="flex items-center gap-1 justify-end">
+                      <button onClick={() => openEdit(e)} className="p-1.5 hover:bg-[#f5f4f1] text-[#8a8a8a] hover:text-[#0d0d0d] rounded-lg transition-all"><Edit2 size={13} /></button>
+                      <button onClick={() => handleDelete(e.id)} className="p-1.5 hover:bg-red-50 text-[#8a8a8a] hover:text-red-500 rounded-lg transition-all"><Trash2 size={13} /></button>
+                    </div>
                   </div>
                 </div>
               ))}

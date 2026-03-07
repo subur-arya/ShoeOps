@@ -123,31 +123,52 @@ export default function CustomerPage() {
           <div className="divide-y divide-[#eceae6]">
             {filtered.map(c => (
               <div key={c.id} className="hover:bg-[#fdf9f7] transition-colors">
-                {/* Name + initials */}
-                <div className="flex items-center gap-3 min-w-0">
+                {/* Mobile card */}
+                <div className="md:hidden px-4 py-3 flex items-center gap-3">
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-extrabold flex-shrink-0 ${
                     c.segment === 'loyal' ? 'bg-green-50 text-green-700' :
                     c.segment === 'risk'  ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-700'
                   }`}>
-                    {c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
+                    {c.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-[#0d0d0d] truncate">{c.name}</p>
-                    {c.phone && <p className="text-[11px] text-[#8a8a8a] font-mono">{c.phone}</p>}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-bold text-[#0d0d0d] truncate">{c.name}</p>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${SEG_STYLE[c.segment]}`}>{SEG_LABEL[c.segment]}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-1">
+                      <span className="text-[11px] text-[#8a8a8a]">{c.total_orders}x · {c.lastOrderDate ? c.daysSince === 0 ? 'Hari ini' : c.daysSince === 1 ? 'Kemarin' : `${c.daysSince} hari lalu` : '—'}</span>
+                      <span className="text-sm font-bold text-[#d4510c]">{formatRupiah(c.totalSpend)}</span>
+                    </div>
                   </div>
                 </div>
-                <span className="text-sm font-bold text-[#0d0d0d]">{c.total_orders}x</span>
-                <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(c.totalSpend)}</span>
-                <span className="text-xs text-[#8a8a8a]">
-                  {c.lastOrderDate
-                    ? c.daysSince === 0 ? 'Hari ini'
-                    : c.daysSince === 1 ? 'Kemarin'
-                    : `${c.daysSince} hari lalu`
-                    : '—'}
-                </span>
-                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full text-center ${SEG_STYLE[c.segment]}`}>
-                  {SEG_LABEL[c.segment]}
-                </span>
+                {/* Desktop row */}
+                <div className="hidden md:grid grid-cols-[1fr_80px_110px_100px_90px] gap-3 items-center px-5 py-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-extrabold flex-shrink-0 ${
+                      c.segment === 'loyal' ? 'bg-green-50 text-green-700' :
+                      c.segment === 'risk'  ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-700'
+                    }`}>
+                      {c.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-[#0d0d0d] truncate">{c.name}</p>
+                      {c.phone && <p className="text-[11px] text-[#8a8a8a] font-mono">{c.phone}</p>}
+                    </div>
+                  </div>
+                  <span className="text-sm font-bold text-[#0d0d0d]">{c.total_orders}x</span>
+                  <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(c.totalSpend)}</span>
+                  <span className="text-xs text-[#8a8a8a]">
+                    {c.lastOrderDate
+                      ? c.daysSince === 0 ? 'Hari ini'
+                      : c.daysSince === 1 ? 'Kemarin'
+                      : `${c.daysSince} hari lalu`
+                      : '—'}
+                  </span>
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full text-center ${SEG_STYLE[c.segment]}`}>
+                    {SEG_LABEL[c.segment]}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
