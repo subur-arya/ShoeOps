@@ -315,6 +315,15 @@ export default function CekPesananPage() {
           ))}
         </div>
       </div>
+
+      {/* Tombol login tersembunyi untuk staff toko */}
+      <div className="pb-8 text-center">
+        <a href="/login"
+          className="text-[10px] text-[#dddbd5] hover:text-[#c0bdb8] transition-colors select-none"
+          title="Portal Staff">
+          · · ·
+        </a>
+      </div>
     </div>
   )
 }

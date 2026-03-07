@@ -56,7 +56,7 @@ export default function OperasionalLayout({ children }: { children: React.ReactN
   return (
     <div className="flex h-screen overflow-hidden">
       <SidebarDark tenant={tenant} userName={userName} onSignOut={signOut} />
-      <div className="flex-1 overflow-y-auto bg-[#f5f4f1]">
+      <div className="flex-1 overflow-y-auto bg-[#f5f4f1] pt-16 lg:pt-0">
         {children}
       </div>
     </div>
