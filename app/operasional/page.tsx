@@ -158,15 +158,15 @@ export default function OperasionalPage() {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {[
           { label: 'Pesanan Hari Ini',    value: todayOrders.length,        col: '' },
-          { label: 'Pendapatan Hari Ini', value: formatRupiah(todayRevenue), col: 'text-[#d4510c]' },
-          { label: 'Belum Selesai',        value: pending,                  col: pending > 5 ? 'text-amber-600' : 'text-green-600' },
+          { label: 'Pendapatan',          value: formatRupiah(todayRevenue), col: 'text-[#d4510c]' },
+          { label: 'Belum Selesai',       value: pending,                   col: pending > 5 ? 'text-amber-600' : 'text-green-600' },
         ].map(s => (
-          <div key={s.label} className="bg-white rounded-xl border border-[#dddbd5] p-4 shadow-sm">
-            <div className="text-[10px] font-bold text-[#8a8a8a] uppercase tracking-widest">{s.label}</div>
-            <div className={`text-2xl font-extrabold tracking-tight mt-1.5 ${s.col}`}>{s.value}</div>
+          <div key={s.label} className="bg-white rounded-xl border border-[#dddbd5] p-2.5 sm:p-4 shadow-sm">
+            <div className="text-[9px] sm:text-[10px] font-bold text-[#8a8a8a] uppercase tracking-widest leading-tight">{s.label}</div>
+            <div className={`text-lg sm:text-2xl font-extrabold tracking-tight mt-1 sm:mt-1.5 truncate ${s.col}`}>{s.value}</div>
           </div>
         ))}
       </div>
@@ -203,51 +203,85 @@ export default function OperasionalPage() {
         ) : (
           <div className="space-y-1.5">
             {filtered.map(order => (
-              <div key={order.id}
-                className="grid grid-cols-[80px_1fr_110px_110px_120px] gap-2 items-center px-3 py-3 bg-white rounded-xl border-[1.5px] border-[#dddbd5] hover:border-[#d4510c]/40 hover:bg-[#fdf0ea]/30 transition-all">
-
-                <span className="font-mono text-xs text-[#8a8a8a] cursor-pointer" onClick={() => setSelected(order)}>
-                  {order.order_code}
-                </span>
-
-                <div className="min-w-0 cursor-pointer" onClick={() => setSelected(order)}>
-                  <div className="text-sm font-bold text-[#0d0d0d] truncate">{order.customers?.name}</div>
-                  <div className="text-[11px] text-[#8a8a8a] truncate">
-                    {order.order_items?.[0]?.treatment_name.split('||')[0]}
-                    {order.order_items && order.order_items.length > 1 ? ` +${order.order_items.length - 1}` : ''}
+              <div key={order.id} className="bg-white rounded-xl border-[1.5px] border-[#dddbd5] hover:border-[#d4510c]/40 hover:bg-[#fdf0ea]/30 transition-all">
+                {/* Mobile card */}
+                <div className="md:hidden px-3 py-3">
+                  {/* Baris 1: Nama + Harga */}
+                  <div className="flex items-start justify-between gap-2" onClick={() => setSelected(order)}>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-bold text-[#0d0d0d] truncate">{order.customers?.name}</div>
+                      <div className="text-[11px] text-[#8a8a8a] truncate">
+                        {order.order_items?.[0]?.treatment_name.split('||')[0]}
+                        {order.order_items && order.order_items.length > 1 ? ` +${order.order_items.length - 1}` : ''}
+                      </div>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-sm font-bold text-[#d4510c]">{formatRupiah(order.total_price)}</div>
+                      <div className="font-mono text-[10px] text-[#8a8a8a]">{order.order_code}</div>
+                    </div>
+                  </div>
+                  {/* Baris 2: Status dropdown */}
+                  <div className="mt-2" onClick={e => e.stopPropagation()}>
+                    <select value={order.status}
+                      onChange={e => handleStatusChange(order.id, e.target.value)}
+                      className="w-full text-[11px] font-bold px-2.5 py-1.5 rounded-lg border-0 outline-none cursor-pointer"
+                      style={stStyle(order.status)}>
+                      {statuses.length === 0
+                        ? <option value={order.status}>{order.status}</option>
+                        : statuses.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
+                    </select>
+                  </div>
+                  {/* Baris 3: Tombol aksi */}
+                  <div className="flex items-center gap-2 mt-2" onClick={e => e.stopPropagation()}>
+                    <a href={buildWAMsg(order)} target="_blank" rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 text-[11px] font-bold rounded-lg border border-green-200">
+                      <MessageCircle size={12} /> Kirim WA
+                    </a>
+                    <button onClick={() => copyLink(order)}
+                      className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-[11px] font-bold rounded-lg border ${
+                        copied === order.id ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-[#f5f4f1] text-[#525252] border-[#dddbd5]'
+                      }`}>
+                      {copied === order.id ? <Check size={12} /> : <Link2 size={12} />}
+                      {copied === order.id ? 'Link Disalin' : 'Salin Link'}
+                    </button>
                   </div>
                 </div>
-
-                {/* Status dropdown — dynamic */}
-                <div onClick={e => e.stopPropagation()}>
-                  <select value={order.status}
-                    onChange={e => handleStatusChange(order.id, e.target.value)}
-                    className="w-full text-[11px] font-bold px-2 py-1.5 rounded-lg border-0 outline-none cursor-pointer"
-                    style={stStyle(order.status)}>
-                    {/* Pastikan value saat ini selalu ada sebagai option */}
-                    {statuses.length === 0
-                      ? <option value={order.status}>{order.status}</option>
-                      : statuses.map(s => (
-                          <option key={s.key} value={s.key}>{s.icon} {s.label}</option>
-                        ))
-                    }
-                  </select>
-                </div>
-
-                <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(order.total_price)}</span>
-
-                <div className="flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
-                  <a href={buildWAMsg(order)} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 text-[11px] font-bold rounded-lg transition-all border border-green-200">
-                    <MessageCircle size={12} /> WA
-                  </a>
-                  <button onClick={() => copyLink(order)}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-all border ${
-                      copied === order.id ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-[#f5f4f1] hover:bg-[#eceae6] text-[#525252] border-[#dddbd5]'
-                    }`}>
-                    {copied === order.id ? <Check size={12} /> : <Link2 size={12} />}
-                    {copied === order.id ? 'Disalin' : 'Link'}
-                  </button>
+                {/* Desktop row */}
+                <div className="hidden md:grid grid-cols-[80px_1fr_110px_110px_120px] gap-2 items-center px-3 py-3">
+                  <span className="font-mono text-xs text-[#8a8a8a] cursor-pointer" onClick={() => setSelected(order)}>
+                    {order.order_code}
+                  </span>
+                  <div className="min-w-0 cursor-pointer" onClick={() => setSelected(order)}>
+                    <div className="text-sm font-bold text-[#0d0d0d] truncate">{order.customers?.name}</div>
+                    <div className="text-[11px] text-[#8a8a8a] truncate">
+                      {order.order_items?.[0]?.treatment_name.split('||')[0]}
+                      {order.order_items && order.order_items.length > 1 ? ` +${order.order_items.length - 1}` : ''}
+                    </div>
+                  </div>
+                  <div onClick={e => e.stopPropagation()}>
+                    <select value={order.status}
+                      onChange={e => handleStatusChange(order.id, e.target.value)}
+                      className="w-full text-[11px] font-bold px-2 py-1.5 rounded-lg border-0 outline-none cursor-pointer"
+                      style={stStyle(order.status)}>
+                      {statuses.length === 0
+                        ? <option value={order.status}>{order.status}</option>
+                        : statuses.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
+                    </select>
+                  </div>
+                  <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(order.total_price)}</span>
+                  <div className="flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
+                    <a href={buildWAMsg(order)} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 text-[11px] font-bold rounded-lg transition-all border border-green-200">
+                      <MessageCircle size={12} /> WA
+                    </a>
+                    <button onClick={() => copyLink(order)}
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold rounded-lg transition-all border ${
+                        copied === order.id ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-[#f5f4f1] hover:bg-[#eceae6] text-[#525252] border-[#dddbd5]'
+                      }`}>
+                      {copied === order.id ? <Check size={12} /> : <Link2 size={12} />}
+                      {copied === order.id ? 'Disalin' : 'Link'}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
