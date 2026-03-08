@@ -1,6 +1,7 @@
 'use client'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { OrderTimeline } from '@/components/ui/OrderTimeline'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { formatDate, formatRupiah } from '@/lib/utils'
@@ -17,6 +18,7 @@ const WA_PATH = "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.
 type TenantInfo = { name: string; phone: string; addr: string; logoUrl: string | null; tenantId: string | null }
 
 export default function CekPesananPage() {
+  const searchParams = useSearchParams()
   const [code,       setCode]       = useState('')
   const [result,     setResult]     = useState<OrderWithDetails | null>(null)
   const [tenant,     setTenant]     = useState<TenantInfo | null>(null)
@@ -26,8 +28,16 @@ export default function CekPesananPage() {
   const [searched,   setSearched]   = useState(false)
   const [searching,  setSearching]  = useState(false)
 
-  async function search() {
-    const q = code.trim().toUpperCase()
+  // Auto-search jika ada ?kode= di URL
+  useEffect(() => {
+    const kode = searchParams.get('kode')
+    if (kode) {
+      setCode(kode.toUpperCase())
+      searchByCode(kode.toUpperCase())
+    }
+  }, [searchParams])
+
+  async function searchByCode(q: string) {
     if (!q) return
     setSearched(true); setSearching(true)
     setResult(null); setTenant(null); setStatuses([]); setStatusLogs([]); setNotFound(false)
@@ -51,6 +61,10 @@ export default function CekPesananPage() {
       setNotFound(true)
     }
     setSearching(false)
+  }
+
+  async function search() {
+    await searchByCode(code.trim().toUpperCase())
   }
 
   const waPhone = tenant?.phone?.replace(/\D/g, '').replace(/^0/, '62') ?? '62'
