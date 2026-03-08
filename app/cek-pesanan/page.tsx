@@ -1,6 +1,6 @@
 'use client'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { OrderTimeline } from '@/components/ui/OrderTimeline'
 import { StatusBadge } from '@/components/ui/StatusBadge'
@@ -17,7 +17,7 @@ const WA_PATH = "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.
 
 type TenantInfo = { name: string; phone: string; addr: string; logoUrl: string | null; tenantId: string | null }
 
-export default function CekPesananPage() {
+function CekPesananContent() {
   const searchParams = useSearchParams()
   const [code,       setCode]       = useState('')
   const [result,     setResult]     = useState<OrderWithDetails | null>(null)
@@ -342,5 +342,13 @@ export default function CekPesananPage() {
         </a>
       </div>
     </div>
+  )
+}
+
+export default function CekPesananPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center"><div className="w-6 h-6 border-2 border-[#d4510c] border-t-transparent rounded-full animate-spin" /></div>}>
+      <CekPesananContent />
+    </Suspense>
   )
 }
