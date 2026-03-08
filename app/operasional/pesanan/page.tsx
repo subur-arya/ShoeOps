@@ -144,38 +144,79 @@ export default function OpsListPesananPage() {
               </div>
             ) : (
               <div key={o.id} className="hover:bg-[#fdf9f7] transition-colors">
-                <span className="font-mono text-xs text-[#8a8a8a] cursor-pointer" onClick={() => setSelected(o)}>{o.order_code}</span>
-                <div className="min-w-0 cursor-pointer" onClick={() => setSelected(o)}>
-                  <p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p>
-                  <p className="text-[11px] text-[#8a8a8a] truncate">
-                    {o.order_items?.[0]?.treatment_name.split('||')[0]}
-                    {o.order_items && o.order_items.length > 1 ? ` +${o.order_items.length - 1}` : ''}
-                  </p>
+                {/* Mobile card */}
+                <div className="md:hidden px-4 py-3">
+                  <div className="flex items-start justify-between gap-2" onClick={() => setSelected(o)}>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p>
+                      <p className="text-[11px] text-[#8a8a8a] truncate">
+                        {o.order_items?.[0]?.treatment_name.split('||')[0]}
+                        {o.order_items && o.order_items.length > 1 ? ` +${o.order_items.length - 1}` : ''}
+                      </p>
+                    </div>
+                    <span className="text-sm font-bold text-[#d4510c] flex-shrink-0">{formatRupiah(o.total_price)}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="font-mono text-[10px] text-[#8a8a8a]">{o.order_code}</span>
+                    <div className="flex-1">
+                      <select value={o.status} onChange={e => handleStatusChange(o.id, e.target.value)}
+                        className="w-full text-[11px] font-bold px-2 py-1 rounded-lg border-0 outline-none cursor-pointer"
+                        style={stStyle(o.status)}>
+                        {statuses.length === 0
+                          ? <option value={o.status}>{o.status}</option>
+                          : statuses.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <a href={buildWAMsg(o)} target="_blank" rel="noopener noreferrer"
+                        className="flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 text-[11px] font-bold rounded-lg border border-green-200">
+                        <MessageCircle size={11} /> WA
+                      </a>
+                      <button onClick={() => copyLink(o)}
+                        className={`flex items-center gap-1 px-2 py-1 text-[11px] font-bold rounded-lg border ${copied === o.id ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-[#f5f4f1] text-[#525252] border-[#dddbd5]'}`}>
+                        {copied === o.id ? <Check size={11} /> : <Link2 size={11} />}
+                        {copied === o.id ? '✓' : 'Link'}
+                      </button>
+                      <button onClick={() => setDelId(o.id)} className="p-1.5 text-[#c0bdb8] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <span className="text-xs text-[#8a8a8a] cursor-pointer" onClick={() => setSelected(o)}>{formatDateShort(o.created_at)}</span>
-                <span className="text-sm font-bold text-[#0d0d0d] cursor-pointer" onClick={() => setSelected(o)}>{formatRupiah(o.total_price)}</span>
-                <select value={o.status} onChange={e => handleStatusChange(o.id, e.target.value)}
-                  className="text-[11px] font-bold px-2 py-1.5 rounded-lg border-0 outline-none cursor-pointer w-full"
-                  style={stStyle(o.status)}>
-                  {statuses.length === 0
-                    ? <option value={o.status}>{o.status}</option>
-                    : statuses.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)
-                  }
-                </select>
-                <div className="flex items-center gap-1">
-                  <a href={buildWAMsg(o)} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1 px-2 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 text-[11px] font-bold rounded-lg transition-all border border-green-200">
-                    <MessageCircle size={11} /> WA
-                  </a>
-                  <button onClick={() => copyLink(o)}
-                    className={`flex items-center gap-1 px-2 py-1.5 text-[11px] font-bold rounded-lg transition-all border ${copied === o.id ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-[#f5f4f1] hover:bg-[#eceae6] text-[#525252] border-[#dddbd5]'}`}>
-                    {copied === o.id ? <Check size={11} /> : <Link2 size={11} />}
-                    {copied === o.id ? '✓' : 'Link'}
+                {/* Desktop row */}
+                <div className="hidden md:grid grid-cols-[80px_1fr_90px_110px_140px_110px_36px] gap-3 items-center px-5 py-3">
+                  <span className="font-mono text-xs text-[#8a8a8a] cursor-pointer" onClick={() => setSelected(o)}>{o.order_code}</span>
+                  <div className="min-w-0 cursor-pointer" onClick={() => setSelected(o)}>
+                    <p className="text-sm font-bold text-[#0d0d0d] truncate">{o.customers?.name}</p>
+                    <p className="text-[11px] text-[#8a8a8a] truncate">
+                      {o.order_items?.[0]?.treatment_name.split('||')[0]}
+                      {o.order_items && o.order_items.length > 1 ? ` +${o.order_items.length - 1}` : ''}
+                    </p>
+                  </div>
+                  <span className="text-xs text-[#8a8a8a] cursor-pointer" onClick={() => setSelected(o)}>{formatDateShort(o.created_at)}</span>
+                  <span className="text-sm font-bold text-[#0d0d0d] cursor-pointer" onClick={() => setSelected(o)}>{formatRupiah(o.total_price)}</span>
+                  <select value={o.status} onChange={e => handleStatusChange(o.id, e.target.value)}
+                    className="text-[11px] font-bold px-2 py-1.5 rounded-lg border-0 outline-none cursor-pointer w-full"
+                    style={stStyle(o.status)}>
+                    {statuses.length === 0
+                      ? <option value={o.status}>{o.status}</option>
+                      : statuses.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
+                  </select>
+                  <div className="flex items-center gap-1">
+                    <a href={buildWAMsg(o)} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1 px-2 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 text-[11px] font-bold rounded-lg transition-all border border-green-200">
+                      <MessageCircle size={11} /> WA
+                    </a>
+                    <button onClick={() => copyLink(o)}
+                      className={`flex items-center gap-1 px-2 py-1.5 text-[11px] font-bold rounded-lg transition-all border ${copied === o.id ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-[#f5f4f1] hover:bg-[#eceae6] text-[#525252] border-[#dddbd5]'}`}>
+                      {copied === o.id ? <Check size={11} /> : <Link2 size={11} />}
+                      {copied === o.id ? '✓' : 'Link'}
+                    </button>
+                  </div>
+                  <button onClick={() => setDelId(o.id)} className="p-1.5 text-[#c0bdb8] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">
+                    <Trash2 size={13} />
                   </button>
                 </div>
-                <button onClick={() => setDelId(o.id)} className="p-1.5 text-[#c0bdb8] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">
-                  <Trash2 size={13} />
-                </button>
               </div>
             ))}
           </div>

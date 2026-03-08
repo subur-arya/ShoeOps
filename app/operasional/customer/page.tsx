@@ -59,24 +59,47 @@ export default function OpsCustomerPage() {
           <div className="divide-y divide-[#eceae6]">
             {filtered.map(c => (
               <div key={c.id} className="hover:bg-[#fdf9f7] transition-colors">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-[#f5f4f1] flex items-center justify-center text-xs font-extrabold text-[#525252] flex-shrink-0">
+                {/* Mobile card */}
+                <div className="md:hidden px-4 py-3 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#f5f4f1] flex items-center justify-center text-xs font-extrabold text-[#525252] flex-shrink-0">
                     {c.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-[#0d0d0d] truncate">{c.name}</p>
-                    {c.phone && (
-                      <a href={`tel:${c.phone}`} className="flex items-center gap-1 text-[11px] text-[#8a8a8a] hover:text-[#d4510c] transition-colors">
-                        <Phone size={10} />{c.phone}
-                      </a>
-                    )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-bold text-[#0d0d0d] truncate">{c.name}</p>
+                      <span className="text-sm font-bold text-[#d4510c] flex-shrink-0">{formatRupiah(c.totalSpend)}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-1">
+                      {c.phone
+                        ? <a href={`tel:${c.phone}`} className="flex items-center gap-1 text-[11px] text-[#8a8a8a] hover:text-[#d4510c]"><Phone size={10} />{c.phone}</a>
+                        : <span className="text-[11px] text-[#8a8a8a]">{c.total_orders}x pesanan</span>}
+                      <span className="text-[11px] text-[#8a8a8a]">
+                        {c.daysSince === null ? '—' : c.daysSince === 0 ? 'Hari ini' : c.daysSince === 1 ? 'Kemarin' : `${c.daysSince} hr lalu`}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <span className="text-sm font-bold text-[#0d0d0d]">{c.total_orders}x</span>
-                <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(c.totalSpend)}</span>
-                <span className="text-xs text-[#8a8a8a]">
-                  {c.daysSince === null ? '—' : c.daysSince === 0 ? 'Hari ini' : c.daysSince === 1 ? 'Kemarin' : `${c.daysSince} hr lalu`}
-                </span>
+                {/* Desktop row */}
+                <div className="hidden md:grid grid-cols-[1fr_70px_100px_90px] gap-3 items-center px-5 py-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-[#f5f4f1] flex items-center justify-center text-xs font-extrabold text-[#525252] flex-shrink-0">
+                      {c.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-[#0d0d0d] truncate">{c.name}</p>
+                      {c.phone && (
+                        <a href={`tel:${c.phone}`} className="flex items-center gap-1 text-[11px] text-[#8a8a8a] hover:text-[#d4510c] transition-colors">
+                          <Phone size={10} />{c.phone}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-sm font-bold text-[#0d0d0d]">{c.total_orders}x</span>
+                  <span className="text-sm font-bold text-[#0d0d0d]">{formatRupiah(c.totalSpend)}</span>
+                  <span className="text-xs text-[#8a8a8a]">
+                    {c.daysSince === null ? '—' : c.daysSince === 0 ? 'Hari ini' : c.daysSince === 1 ? 'Kemarin' : `${c.daysSince} hr lalu`}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
